@@ -1,32 +1,57 @@
-import gpt_assistant.web_driver
-import urllib.request
 import csv
-import pyppeteer
+
+import gpt_assistant.web_driver
+from gpt_assistant.html_getter import html_getter
+
 
 class requester(gpt_assistant.web_driver.gpt_helper):
-    default_page=r"https://www.pracuj.pl/praca/c%25252b%25252b%2520programmer"
-    default_filepath=r"C:\Users\vwork\PycharmProjects\gpt_and_telegram__helper\test_file.csv"
-    def get_page(self,page=default_page):
-        fp = urllib.request.urlopen(page)
-        mybytes = fp.read()
-        mystr = mybytes.decode("utf8")
-        fp.close()
-        print(mystr)
-        return mystr
-    def add_request(self,filepath=default_filepath):
-        file = open(filepath)
-        csvreader=csv.reader(file)
-        headers=[]
-        headers=next(csvreader)
-        rows = []
-        for row in csvreader:
-            rows.append(row)
-        #print(headers)
-        #print(rows)
-        #for i in rows:
-        print(rows[0][1])
-        text_request=self.get_page()
-        #print(text_request)
+    template = f'''    
+    jezeli w tym html kodzie jest oferta pracy SPELNIAJACA WSZYSTKIE PODANE warunki napisz TYLKO 'YES123'+W nactepnej linijce wypisz krotko informacje o tej ofercie i podaj jej html kod + wytlumacz czemu wybrales to+ podaj slowa kluczowe ktore przekonaly ciebie. inaczej 'NO321'. 
+    POSTARAJ SIE
+    ODPOWIADAJ TYLKO PO ANGIELSKU
+    warunki:'''
+    output_message = ''
+    bufpage = None
+    strbuf = None
+    default_page = r"https://www.pracuj.pl/praca/c%25252b%25252b%2520programmer"
+    default_filepath = r"C:\Users\vwork\PycharmProjects\gpt_and_telegram__helper\test_file.csv"
 
-rr=requester()
+    def get_page(self, page=default_page):
+        print(f"page={page} ,buf={self.bufpage}")
+        if page == self.bufpage:
+            return self.strbuf
+        else:
+            self.bufpage = page
+            getter = html_getter()
+            mystr = getter.get_html(page)
+            self.strbuf = mystr
+            return mystr
+
+    def add_request(self, filepath=default_filepath):
+        file = open(filepath)
+        csvreader = csv.reader(file)
+        headers = []
+        headers = next(csvreader)
+
+        for row in csvreader:
+
+            req=row[0]
+            url=row[1]
+            html = self.get_page(url)
+            print(f"req={req}\nurl={url} html={html[1:10]}")
+
+
+        # print(headers)
+        # print(rows)
+        # for i in rows:
+
+        #
+        # print(text_request)
+
+
+    def get_output_msg(self):
+        return self.output_message
+
+
+rr = requester()
 rr.add_request()
