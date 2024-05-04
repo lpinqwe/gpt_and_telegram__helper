@@ -1,1 +1,0 @@
-acc='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'
