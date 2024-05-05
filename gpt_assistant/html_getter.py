@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 import time
 
 
@@ -6,7 +8,16 @@ class HTMLGetter:
     browser = None
 
     def __init__(self):
-        self.browser = webdriver.Firefox()
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Enable headless mode
+        self.browser = webdriver.Chrome(options=chrome_options)
+
+    def __del__(self):
+        self.close_browser()
+
+    def close_browser(self):
+        if self.browser is not None:
+            self.browser.quit()
 
     def get_html(self, url):
         self.browser.get(url)
@@ -15,8 +26,6 @@ class HTMLGetter:
         return html
 
 
-"""
-url="https://www.pracuj.pl/praca/c%252B%252B%20programmer"
-g=html_getter()
-g.get_html(url)
-"""
+test_url = "https://www.pracuj.pl/praca/c%252B%252B%20programmer"
+test = HTMLGetter()
+print(test.get_html(test_url))

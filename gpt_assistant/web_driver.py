@@ -16,7 +16,7 @@ class GPTHelper:
                                                     ODPOWIADAJ TYLKO PO POLSKU LUB ANGIELSKU
                                                     warunki:i need a low code  vacancy with a more than 6000zl salary
                                                     albo do dogadania. 
-                                                    '''}]
+        '''}]
 
     def send_request(self):
         self.flag = False
