@@ -1,7 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
 import time
+
+"""
+HTMLGetter gets html of the specific page
+"""
 
 
 class HTMLGetter:
@@ -24,8 +27,3 @@ class HTMLGetter:
         html = self.browser.page_source
         time.sleep(2)
         return html
-
-
-test_url = "https://www.pracuj.pl/praca/c%252B%252B%20programmer"
-test = HTMLGetter()
-print(test.get_html(test_url))
